@@ -163,7 +163,7 @@ class LAN_Sniffer():
         console.print(
             "\n[bold green][+] Sniffing mDNS and SSDP traffic!"
             f"\n    mDNS: {PORT_MDNS}"
-            f"\n.   SSDP: {PORT_SSDP}\n"
+            f"\n    SSDP: {PORT_SSDP}\n"
         )
         
         sniff(filter=FILTER, prn=cls._handle_pkt, store=False)
