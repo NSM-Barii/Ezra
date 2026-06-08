@@ -28,11 +28,11 @@ class LAN_Sniffer():
     """This class will be responsible for scanning/sniffing for mdns/* protocol traffic"""
 
 
-    APPLE_KEYS   = ["_airplay._tcp", "_homekit._tcp", "_raop._tcp", "_apple-mobdev2._tcp"]
-    GOOGLE_KEYS  = ["_googlecast._tcp", "google", "chromecast", "dial-multiscreen-org"]
+    APPLE_KEYS   = ["_airplay._tcp", "_homekit._tcp", "_hap._tcp", "_raop._tcp", "_apple-mobdev2._tcp"]
+    GOOGLE_KEYS  = ["_googlecast._tcp", "dial-multiscreen-org", "google", "chromecast"]
     AMAZON_KEYS  = ["_amzn-wplay._tcp", "amazon", "alexa"]
-    ROKU_KEYS    = ["roku:ecp", "uuid:roku"]
-    SAMSUNG_KEYS = ["samsung", "tizen", "samsungmrdesc"]
+    ROKU_KEYS    = ["roku:ecp", "uuid:roku", "_roku-ecp._tcp", "roku-ecp", "roku"]
+    SAMSUNG_KEYS = ["samsung", "urn:samsung.com", "tizen", "samsungmrdesc"]
 
 
     @classmethod
@@ -108,7 +108,7 @@ class LAN_Sniffer():
         c2 = "bold yellow"
         c3 = "bold green"
 
-        panel.renderable = (f"[{c1}]Total Devices:[{c2}] {Variables.dev_total}  -  [{c3}]Developed by NSM Barii"
+        panel.renderable = (f"[bold magenta]Total Devices:[/bold magenta] [bold white]{Variables.dev_total}[/bold white]  -  [bold magenta]Packets:[/bold magenta] [bold white]{Variables.pkts}[/bold white]  -  [{c3}]Developed by NSM Barii"
                     f"\n[{c1}]Apple:[/{c1}] [{c2}]{Variables.dev_apples}[/{c2}]  -  [{c1}]Roku:[/{c1}] [{c2}]{Variables.dev_roku}[/{c2}]  -  [{c1}]Google:[/{c1}] [{c2}]{Variables.dev_google}[/{c2}]  -  [{c1}]Amazon:[/{c1}] [{c2}]{Variables.dev_amazon}[/{c2}]  -  [{c1}]Samsung:[/{c1}] [{c2}]{Variables.dev_samsung}[/{c2}]  -  [{c1}]Unknown:[/{c1}] [{c2}]{Variables.dev_unknown}[/{c2}]"
                     )
     
@@ -177,7 +177,7 @@ class LAN_Sniffer():
         c2 = "bold yellow"
         c3 = "bold green"
 
-        panel.renderable = (f"[{c1}]Total Devices:[{c2}] {Variables.dev_total}  -  [{c3}]Developed by NSM Barii"
+        panel.renderable = (f"[bold magenta]Total Devices:[/bold magenta] [bold white]{Variables.dev_total}[/bold white]  -  [bold magenta]Packets:[/bold magenta] [bold white]{Variables.pkts}[/bold white]  -  [{c3}]Developed by NSM Barii"
                     f"\n[{c1}]Apple:[/{c1}] [{c2}]{Variables.dev_apples}[/{c2}]  -  [{c1}]Roku:[/{c1}] [{c2}]{Variables.dev_roku}[/{c2}]  -  [{c1}]Google:[/{c1}] [{c2}]{Variables.dev_google}[/{c2}]  -  [{c1}]Amazon:[/{c1}] [{c2}]{Variables.dev_amazon}[/{c2}]  -  [{c1}]Samsung:[/{c1}] [{c2}]{Variables.dev_samsung}[/{c2}]  -  [{c1}]Unknown:[/{c1}] [{c2}]{Variables.dev_unknown}[/{c2}]"
                     )
 
