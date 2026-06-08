@@ -18,7 +18,16 @@ class Variables():
 
 
     console = console
+    panel   = Panel(renderable="Developed by NSM Barii", style="bord red", border_style="bold purple", expand=False, title="Stats")
     table   = Table(title="LAN Devices", style="bold red", border_style="bold purple", header_style="bold red")
-    table.add_column("")
+    
+    ip_srcs = []
     devices = {}
-    num     = 0
+    dev_apples  = 0
+    dev_roku    = 0
+    dev_google  = 0
+    dev_amazon  = 0
+    dev_samsung = 0
+    dev_unknown = 0
+    dev_total   = 0
+    pkts        = 0

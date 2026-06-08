@@ -2,6 +2,10 @@
 
 
 
+# UI IMPORTS
+from rich.live import Live
+
+
 # ETC IMPORTS
 from scapy.all import sniff, IP, UDP, DNS, DNSRR, Raw
 import threading
@@ -14,6 +18,7 @@ from vars import Variables
 # CONSTANTS
 console = Variables.console
 table   = Variables.table
+panel   = Variables.panel
 PORT_MDNS  = 5353
 PORT_SSDP  = 1900
 FILTER     = "udp port 5353 or udp port 1900"
@@ -22,7 +27,30 @@ FILTER     = "udp port 5353 or udp port 1900"
 class LAN_Sniffer():
     """This class will be responsible for scanning/sniffing for mdns/* protocol traffic"""
 
-    
+
+    APPLE_KEYS   = ["_airplay._tcp", "_homekit._tcp", "_raop._tcp", "_apple-mobdev2._tcp"]
+    GOOGLE_KEYS  = ["_googlecast._tcp", "google", "chromecast", "dial-multiscreen-org"]
+    AMAZON_KEYS  = ["_amzn-wplay._tcp", "amazon", "alexa"]
+    ROKU_KEYS    = ["roku:ecp", "uuid:roku"]
+    SAMSUNG_KEYS = ["samsung", "tizen", "samsungmrdesc"]
+
+
+    @classmethod
+    def _categorize(cls, *fields):
+        """Checks fields against known keywords and increments the right counter"""
+
+
+        combined = " ".join(str(f) for f in fields if f).lower()
+
+        if   any(k in combined for k in cls.APPLE_KEYS):   Variables.dev_apples  += 1
+        elif any(k in combined for k in cls.GOOGLE_KEYS):  Variables.dev_google  += 1
+        elif any(k in combined for k in cls.AMAZON_KEYS):  Variables.dev_amazon  += 1
+        elif any(k in combined for k in cls.ROKU_KEYS):    Variables.dev_roku    += 1
+        elif any(k in combined for k in cls.SAMSUNG_KEYS): Variables.dev_samsung += 1
+        else:                                              Variables.dev_unknown += 1
+
+        Variables.dev_total += 1
+
 
     @classmethod
     def _parse_ssdp(cls, pkt, verbose=False):
@@ -57,15 +85,17 @@ class LAN_Sniffer():
         server   = fields.get("server",   False)
         usn      = fields.get("usn",      False)
 
+        
+        if ip_src not in Variables.ip_srcs:
+            Variables.ip_srcs.append(ip_src)
+            cls._categorize(type, server, usn)
 
-        Variables.num +=1 
+        Variables.pkts +=1
         device = {
-            "#": Variables.num,
+            "#": Variables.pkts,
             "Proto": "SSDP",
-            "ip_src": ip_src,
-            "port_src": port_src,
-            "ip_dst": ip_dst,
-            "port_dst": port_dst,
+            "ip_src": f"{ip_src}:{port_src}",
+            "ip_dst": f"{ip_dst}:{port_dst}",
             "type": type,
             "location": location,
             "server": server,
@@ -73,8 +103,15 @@ class LAN_Sniffer():
         }
 
         console.print(device)
-    
 
+        c1 = "bold red"
+        c2 = "bold yellow"
+        c3 = "bold green"
+
+        panel.renderable = (f"[{c1}]Total Devices:[{c2}] {Variables.dev_total}  -  [{c3}]Developed by NSM Barii"
+                    f"\n[{c1}]Apple:[/{c1}] [{c2}]{Variables.dev_apples}[/{c2}]  -  [{c1}]Roku:[/{c1}] [{c2}]{Variables.dev_roku}[/{c2}]  -  [{c1}]Google:[/{c1}] [{c2}]{Variables.dev_google}[/{c2}]  -  [{c1}]Amazon:[/{c1}] [{c2}]{Variables.dev_amazon}[/{c2}]  -  [{c1}]Samsung:[/{c1}] [{c2}]{Variables.dev_samsung}[/{c2}]  -  [{c1}]Unknown:[/{c1}] [{c2}]{Variables.dev_unknown}[/{c2}]"
+                    )
+    
 
     @classmethod
     def _parse_mdns(cls, pkt, verbose=False):
@@ -98,10 +135,7 @@ class LAN_Sniffer():
 
         if dns.qd:
 
-            try:
-
-                question = dns.qd.qname.decode(errors="ignore")
-
+            try: question = dns.qd.qname.decode(errors="ignore")
             except Exception: pass
         
 
@@ -121,23 +155,32 @@ class LAN_Sniffer():
                 
                 data = ans.rdata
         
-        Variables.num +=1 
+      
+        if ip_src not in Variables.ip_srcs:
+            Variables.ip_srcs.append(ip_src)
+            cls._categorize(question, name, data)
+
+        Variables.pkts +=1
         device = {
-            "#": Variables.num,
+            "#": Variables.pkts,
             "proto": "mDNS",
-            "ip_src": ip_src,
-            "port_src": port_src,
-            "ip_dst": ip_dst,
-            "port_dst": port_dst,
+            "ip_src": f"{ip_src}:{port_src}",
+            "ip_dst": f"{ip_dst}:{port_dst}",
             "question": question,
             "name": name,
             "data": data
         }
 
         console.print(device)
-    
 
-    
+        c1 = "bold red"
+        c2 = "bold yellow"
+        c3 = "bold green"
+
+        panel.renderable = (f"[{c1}]Total Devices:[{c2}] {Variables.dev_total}  -  [{c3}]Developed by NSM Barii"
+                    f"\n[{c1}]Apple:[/{c1}] [{c2}]{Variables.dev_apples}[/{c2}]  -  [{c1}]Roku:[/{c1}] [{c2}]{Variables.dev_roku}[/{c2}]  -  [{c1}]Google:[/{c1}] [{c2}]{Variables.dev_google}[/{c2}]  -  [{c1}]Amazon:[/{c1}] [{c2}]{Variables.dev_amazon}[/{c2}]  -  [{c1}]Samsung:[/{c1}] [{c2}]{Variables.dev_samsung}[/{c2}]  -  [{c1}]Unknown:[/{c1}] [{c2}]{Variables.dev_unknown}[/{c2}]"
+                    )
+
     @classmethod
     def _handle_pkt(cls, pkt):
         """This will be used to segment where a pkt will go"""
@@ -154,6 +197,7 @@ class LAN_Sniffer():
         
         threading.Thread(target=go, args=(pkt,), daemon=True).start()
     
+
     
     @classmethod
     def main(cls):
@@ -166,7 +210,9 @@ class LAN_Sniffer():
             f"\n    SSDP: {PORT_SSDP}\n"
         )
         
-        sniff(filter=FILTER, prn=cls._handle_pkt, store=False)
+        with Live(panel, console=console, refresh_per_second=4):
+
+            sniff(filter=FILTER, prn=cls._handle_pkt, store=False)
         
 
 
