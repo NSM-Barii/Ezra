@@ -81,13 +81,12 @@ class LAN_Sniffer():
 
 
         if DNS not in pkt: return False
+        if IP not in pkt: return False
 
         dns = pkt[DNS]
         question = False
         name     = False
         data     = False
-
-        if not dns: return False
 
         ip_src = pkt[IP].src
         ip_dst = pkt[IP].dst
