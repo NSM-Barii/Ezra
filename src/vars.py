@@ -18,7 +18,7 @@ class Variables():
 
 
     console = console
-    panel   = Panel(renderable="Developed by NSM Barii", style="bord red", border_style="bold purple", expand=False, title="Stats")
+    panel   = Panel(renderable="Developed by NSM Barii", style="bold red", border_style="bold purple", expand=False, title="Stats")
     table   = Table(title="LAN Devices", style="bold red", border_style="bold purple", header_style="bold red")
     
     ip_srcs = []
