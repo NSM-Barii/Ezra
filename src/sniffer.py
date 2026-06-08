@@ -58,6 +58,7 @@ class LAN_Sniffer():
         usn      = fields.get("usn",      False)
 
 
+        Variables.num +=1 
         device = {
             "#": Variables.num,
             "Proto": "SSDP",
@@ -120,7 +121,7 @@ class LAN_Sniffer():
                 
                 data = ans.rdata
         
-        
+        Variables.num +=1 
         device = {
             "#": Variables.num,
             "proto": "mDNS",
