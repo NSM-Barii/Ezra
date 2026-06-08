@@ -87,6 +87,8 @@ class LAN_Sniffer():
         name     = False
         data     = False
 
+        if not pkt[IP].src or not pkt[IP].dst: return False
+
         ip_src = pkt[IP].src
         ip_dst = pkt[IP].dst
 
