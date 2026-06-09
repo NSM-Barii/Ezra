@@ -206,8 +206,8 @@ class LAN_Sniffer():
 
         console.print(
             "\n[bold green][+] Sniffing mDNS and SSDP traffic!"
-            f"\n    mDNS: {PORT_MDNS}"
-            f"\n    SSDP: {PORT_SSDP}\n"
+            f"\n   - mDNS: {PORT_MDNS}"
+            f"\n   - SSDP: {PORT_SSDP}\n"
         )
         
         with Live(panel, console=console, refresh_per_second=4):
