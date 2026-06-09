@@ -12,10 +12,10 @@ from vars import Variables
 
 
 # CONSTANTS
-console  = Variables.console
-MDNS_IP  = "224.0.0.251"
+console   = Variables.console
+MDNS_IP   = "224.0.0.251"
 MDNS_PORT = 5353
-TTL      = 120
+TTL       = 120
 
 
 class Spoofer():
@@ -23,8 +23,7 @@ class Spoofer():
 
 
     @classmethod
-    def _send(cls, name, service, iface=None):
-        """Crafts and sends a single fake mDNS PTR announcement"""
+    def _send(cls, name, service):
 
         record = f"{name}.{service}.local.".encode()
 
@@ -44,18 +43,11 @@ class Spoofer():
             )
         )
 
-        send(pkt, iface=iface, verbose=False)
+        send(pkt, verbose=False)
 
 
     @classmethod
-    def spam(cls, devices, iface=None, interval=110):
-        """
-        Continuously re-announces fake devices to keep them alive in LAN caches.
-
-        devices  - list of (name, service) tuples
-        iface    - network interface e.g "eth0"
-        interval - seconds between re-announcements (keep below TTL of 120)
-        """
+    def spam(cls, devices, interval=110):
 
         console.print(f"\n[bold green][+] Starting mDNS spoof — {len(devices)} fake devices\n")
 
@@ -73,13 +65,12 @@ class Spoofer():
 
 
     @classmethod
-    def once(cls, devices, iface=None):
-        """Sends each fake device announcement a single time"""
+    def once(cls, devices):
 
         console.print(f"\n[bold green][+] Sending {len(devices)} fake mDNS announcements\n")
 
         for name, service in devices:
-            cls._send(name=name, service=service, iface=iface)
+            cls._send(name=name, service=service)
             console.print(f"[cyan][SPOOF][/cyan] Sent: [bold]{name}[/bold] → {service}.local")
 
 
@@ -96,11 +87,9 @@ if __name__ == "__main__":
         ("Kitchen HomePod Mini",    "_raop._tcp"),
     ]
 
-    Spoofer.spam(devices=fake_devices, iface="eth0")
+    Spoofer.spam(devices=fake_devices)
 
-    # keep main thread alive
     try:
-        while True:
-            time.sleep(1)
+        while True: time.sleep(1)
     except KeyboardInterrupt:
         console.print("\n[red][!] Stopped[/red]")
