@@ -1,0 +1,121 @@
+<svg width="1200" height="300" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="4" result="coloredBlur"/>
+      <feMerge>
+        <feMergeNode in="coloredBlur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+
+    <linearGradient id="bgGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#000a0f;stop-opacity:1">
+        <animate attributeName="stop-color" values="#000a0f;#001a2e;#000a0f" dur="4s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="50%" style="stop-color:#001a2e;stop-opacity:1">
+        <animate attributeName="stop-color" values="#001a2e;#002a45;#001a2e" dur="4s" repeatCount="indefinite"/>
+      </stop>
+      <stop offset="100%" style="stop-color:#000a0f;stop-opacity:1">
+        <animate attributeName="stop-color" values="#000a0f;#001a2e;#000a0f" dur="4s" repeatCount="indefinite"/>
+      </stop>
+    </linearGradient>
+
+    <linearGradient id="blueGlow" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#00aaff;stop-opacity:1"/>
+      <stop offset="50%" style="stop-color:#0066cc;stop-opacity:1"/>
+      <stop offset="100%" style="stop-color:#003388;stop-opacity:1"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Background -->
+  <rect width="1200" height="300" fill="url(#bgGradient)"/>
+
+  <!-- Tech grid lines -->
+  <g stroke="#003366" stroke-width="1" opacity="0.3">
+    <line x1="0" y1="50" x2="1200" y2="50"/>
+    <line x1="0" y1="100" x2="1200" y2="100"/>
+    <line x1="0" y1="150" x2="1200" y2="150"/>
+    <line x1="0" y1="200" x2="1200" y2="200"/>
+    <line x1="0" y1="250" x2="1200" y2="250"/>
+  </g>
+
+  <!-- Animated blue scan line -->
+  <line x1="0" y1="0" x2="1200" y2="0" stroke="#00aaff" stroke-width="2" opacity="0.8" filter="url(#glow)">
+    <animate attributeName="y1" values="0;300;0" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="y2" values="0;300;0" dur="3s" repeatCount="indefinite"/>
+  </line>
+
+  <!-- Left lightsaber blade -->
+  <rect x="50" y="120" width="8" height="60" fill="url(#blueGlow)" filter="url(#glow)" rx="4">
+    <animate attributeName="opacity" values="0.8;1;0.8" dur="1.5s" repeatCount="indefinite"/>
+  </rect>
+
+  <!-- Right lightsaber blade -->
+  <rect x="1142" y="120" width="8" height="60" fill="url(#blueGlow)" filter="url(#glow)" rx="4">
+    <animate attributeName="opacity" values="0.8;1;0.8" dur="1.5s" repeatCount="indefinite"/>
+  </rect>
+
+  <!-- Animated network pulse rings -->
+  <circle cx="600" cy="150" r="20" fill="none" stroke="#00aaff" stroke-width="1" opacity="0.6">
+    <animate attributeName="r" values="20;80;20" dur="3s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.6;0;0.6" dur="3s" repeatCount="indefinite"/>
+  </circle>
+  <circle cx="600" cy="150" r="20" fill="none" stroke="#00aaff" stroke-width="1" opacity="0.4">
+    <animate attributeName="r" values="20;80;20" dur="3s" begin="1s" repeatCount="indefinite"/>
+    <animate attributeName="opacity" values="0.4;0;0.4" dur="3s" begin="1s" repeatCount="indefinite"/>
+  </circle>
+
+  <!-- Main Title: EZRA -->
+  <text x="600" y="145" font-family="'Courier New', monospace" font-size="80" font-weight="bold" fill="url(#blueGlow)" text-anchor="middle" filter="url(#glow)">
+    EZRA
+    <animate attributeName="opacity" values="1;0.9;1" dur="2s" repeatCount="indefinite"/>
+  </text>
+
+  <!-- Subtitle -->
+  <text x="600" y="182" font-family="'Courier New', monospace" font-size="18" fill="#44aaff" text-anchor="middle" opacity="0.9">
+    LAN Intelligence Suite  |  mDNS &amp; SSDP Recon
+  </text>
+
+  <!-- Quote -->
+  <text x="600" y="210" font-family="'Courier New', monospace" font-size="14" fill="#005588" text-anchor="middle" opacity="0.8" font-style="italic">
+    "I can feel them... I can feel all of them." - Ezra Bridger
+  </text>
+
+  <!-- Tech details bar -->
+  <rect x="300" y="232" width="600" height="40" fill="#000a0f" opacity="0.8" rx="5"/>
+
+  <!-- Feature badges -->
+  <g>
+    <text x="330" y="257" font-family="'Courier New', monospace" font-size="12" fill="#0088cc" text-anchor="middle">
+      [mDNS]
+      <animate attributeName="fill" values="#0088cc;#00aaff;#0088cc" dur="2s" repeatCount="indefinite"/>
+    </text>
+    <text x="440" y="257" font-family="'Courier New', monospace" font-size="12" fill="#0088cc" text-anchor="middle">
+      [SSDP]
+      <animate attributeName="fill" values="#0088cc;#00aaff;#0088cc" dur="2s" begin="0.3s" repeatCount="indefinite"/>
+    </text>
+    <text x="550" y="257" font-family="'Courier New', monospace" font-size="12" fill="#0088cc" text-anchor="middle">
+      [SPOOF]
+      <animate attributeName="fill" values="#0088cc;#00aaff;#0088cc" dur="2s" begin="0.6s" repeatCount="indefinite"/>
+    </text>
+    <text x="670" y="257" font-family="'Courier New', monospace" font-size="12" fill="#0088cc" text-anchor="middle">
+      [FINGERPRINT]
+      <animate attributeName="fill" values="#0088cc;#00aaff;#0088cc" dur="2s" begin="0.9s" repeatCount="indefinite"/>
+    </text>
+    <text x="810" y="257" font-family="'Courier New', monospace" font-size="12" fill="#0088cc" text-anchor="middle">
+      [PRIVACY]
+      <animate attributeName="fill" values="#0088cc;#00aaff;#0088cc" dur="2s" begin="1.2s" repeatCount="indefinite"/>
+    </text>
+  </g>
+
+  <!-- Corner accent lines -->
+  <polyline points="0,0 50,0 50,50 0,50" fill="none" stroke="#00aaff" stroke-width="2" opacity="0.5"/>
+  <polyline points="1200,0 1150,0 1150,50 1200,50" fill="none" stroke="#00aaff" stroke-width="2" opacity="0.5"/>
+  <polyline points="0,300 50,300 50,250 0,250" fill="none" stroke="#00aaff" stroke-width="2" opacity="0.5"/>
+  <polyline points="1200,300 1150,300 1150,250 1200,250" fill="none" stroke="#00aaff" stroke-width="2" opacity="0.5"/>
+
+  <!-- NSM Barii -->
+  <text x="1150" y="290" font-family="'Courier New', monospace" font-size="10" fill="#003366" text-anchor="end" opacity="0.6">
+    NSM-BARII
+  </text>
+</svg>
