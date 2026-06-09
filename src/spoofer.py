@@ -64,7 +64,7 @@ class Spoofer():
             while True:
 
                 for name, service in devices:
-                    cls._send(name=name, service=service, iface="wlan0")
+                    cls._send(name=name, service=service)
                     console.print(f"[cyan][SPOOF][/cyan] Announced: [bold]{name}[/bold] → {service}.local")
 
                 time.sleep(interval)
