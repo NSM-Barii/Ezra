@@ -75,13 +75,8 @@ class LAN_Sniffer():
 
         pkt_ssdp = IP(dst="239.255.255.250")/UDP(sport=32000, dport=1900)/Raw(load=payload.encode())
 
-        console.print("\n[bold cyan]┌─────────────────────────────────────┐")
-        console.print("[bold cyan]│        Sending Discovery Queries     │")
-        console.print("[bold cyan]├─────────────────────────────────────┤")
-        console.print("[bold cyan]│ [bold yellow]mDNS[/bold yellow]  →  224.0.0.251:5353          [bold cyan]│")
-        console.print("[bold cyan]│ [bold yellow]SSDP[/bold yellow]  →  239.255.255.250:1900       [bold cyan]│")
-        console.print(f"[bold cyan]│ [bold yellow]Sleep[/bold yellow] →  {Variables.packet_sleep}s                          [bold cyan]│")
-        console.print("[bold cyan]└─────────────────────────────────────┘\n")
+        console.print("\n[bold cyan][+] mDNS Query  →  224.0.0.251:5353")
+        console.print("[bold cyan][+] SSDP Query  →  239.255.255.250:1900\n")
 
         while True:
             send(pkt_mdns, verbose=False)
@@ -136,20 +131,22 @@ class LAN_Sniffer():
             "server": server,
             "usn": usn
         }
+        if not any([type, server, usn]): return False
+
         if ip_src not in Variables.ip_srcs:
             Variables.ip_srcs.append(ip_src)
             cls._categorize(type, server, usn)
             Variables.dev_ssdp += 1
-            console.print(f"[bold green] [+]New SSDP Device:[/bold green] {device}")
+            console.print(f"[bold green][+] New SSDP Device\n[bold cyan]    IP       [white]→  {ip_src}\n[bold cyan]    Type     [white]→  {type}\n[bold cyan]    Server   [white]→  {server}\n[bold cyan]    USN      [white]→  {usn}\n[bold cyan]    Location [white]→  {location}")
 
-        else: console.print(device)
+        else: console.print(f"[dim][~] SSDP  {ip_src}  →  {type}")
 
         c1 = "bold red"
         c2 = "bold yellow"
         c3 = "bold green"
 
-        panel.renderable = (f"[bold magenta]Total Devices:[/bold magenta] [bold white]{Variables.dev_total}[/bold white]  -  [bold magenta]Packets:[/bold magenta] [bold white]{Variables.pkts}[/bold white]  -  [{c3}]Developed by NSM Barii"
-                    f"\n[{c1}]mDNS:[/{c1}] [{c2}]{Variables.dev_mdns}[/{c2}]  -  [{c1}]SSDP:[/{c1}] [{c2}]{Variables.dev_ssdp}[/{c2}]"
+        panel.renderable = (f"[bold magenta]Total Devices:[/bold magenta] [bold white]{Variables.dev_total}[/bold white]  -  [bold magenta]Packets:[/bold magenta] [bold white]{Variables.pkts}[/bold white]  -  [{c3}]Developed by NSM Barii[/{c3}]"
+                    f"\n                    [{c1}]mDNS:[/{c1}] [{c2}]{Variables.dev_mdns}[/{c2}]  -  [{c1}]SSDP:[/{c1}] [{c2}]{Variables.dev_ssdp}[/{c2}]"
                     f"\n[{c1}]Apple:[/{c1}] [{c2}]{Variables.dev_apples}[/{c2}]  -  [{c1}]Roku:[/{c1}] [{c2}]{Variables.dev_roku}[/{c2}]  -  [{c1}]Google:[/{c1}] [{c2}]{Variables.dev_google}[/{c2}]  -  [{c1}]Amazon:[/{c1}] [{c2}]{Variables.dev_amazon}[/{c2}]  -  [{c1}]Samsung:[/{c1}] [{c2}]{Variables.dev_samsung}[/{c2}]  -  [{c1}]Unknown:[/{c1}] [{c2}]{Variables.dev_unknown}[/{c2}]"
                     )
 
@@ -180,23 +177,24 @@ class LAN_Sniffer():
             except Exception: pass
         
 
+        names = []
+        datas = []
+
         for i in range(dns.ancount):
 
             ans = dns.an[i]
 
             if isinstance(ans, DNSRR):
 
-                try:
+                try:    names.append(ans.rrname.decode(errors="ignore"))
+                except: names.append(str(ans.rrname))
 
-                    name = ans.rrname.decode(errors="ignore")
-                
-                except Exception: 
-                    
-                    name = str(ans.rrname)
-                
-                data = ans.rdata
-        
-      
+                datas.append(str(ans.rdata))
+
+        name = " ".join(names) if names else False
+        data = " ".join(datas) if datas else False
+
+        if not any([question, name, data]): return False
 
         Variables.pkts +=1
         device = {
@@ -212,9 +210,9 @@ class LAN_Sniffer():
             Variables.ip_srcs.append(ip_src)
             cls._categorize(question, name, data)
             Variables.dev_mdns += 1
-            console.print(f"[bold green] [+]New mDNS Device:[/bold green] {device}")
+            console.print(f"[bold green][+] New mDNS Device\n[bold cyan]    IP       [white]→  {ip_src}\n[bold cyan]    Question [white]→  {question}\n[bold cyan]    Name     [white]→  {name}\n[bold cyan]    Data     [white]→  {data}")
 
-        else: console.print(device)
+        else: console.print(f"[dim][~] mDNS  {ip_src}  →  {question}")
 
         c1 = "bold red"
         c2 = "bold yellow"
