@@ -7,7 +7,7 @@ from rich.live import Live
 
 
 # ETC IMPORTS
-from scapy.all import sniff, IP, UDP, DNS, DNSRR, Raw, sendp, DNSQR
+from scapy.all import sniff, IP, UDP, DNS, DNSRR, Raw, send, DNSQR
 import threading, time
 
 
@@ -21,7 +21,7 @@ table   = Variables.table
 panel   = Variables.panel
 PORT_MDNS  = 5353
 PORT_SSDP  = 1900
-FILTER     = "udp port 5353 or udp port 1900"
+FILTER     = "udp port 5353 or udp port 1900 or udp dst port 32000"
 
 
 class LAN_Sniffer():
@@ -73,13 +73,13 @@ class LAN_Sniffer():
           DNS(rd=0, qd=DNSQR(qname="_services._dns-sd._udp.local", qtype="PTR"))                                                                                                                        
       )  
 
-        pkt_ssdp = IP(dst="239.255.255.250")/UDP(sport=1900, dport=1900)/Raw(load=payload.encode())
+        pkt_ssdp = IP(dst="239.255.255.250")/UDP(sport=32000, dport=1900)/Raw(load=payload.encode())
 
-        console.print("[bold yellow][+] Crafting Discovery Packets")
-        
+        console.print("[bold yellow][+] Crafting Discovery Packets\n")
+
         while True:
-            sendp(pkt_mdns, verbose=False)
-            sendp(pkt_ssdp, verbose=False)
+            send(pkt_mdns, verbose=False)
+            send(pkt_ssdp, verbose=False)
             time.sleep(Variables.packet_sleep)
 
 
@@ -133,7 +133,7 @@ class LAN_Sniffer():
         if ip_src not in Variables.ip_srcs:
             Variables.ip_srcs.append(ip_src)
             cls._categorize(type, server, usn)
-            console.print(f"[bold green][+]New mDNS Device:[/bold green] {device}")
+            console.print(f"[bold green] [+]New mDNS Device:[/bold green] {device}")
 
         else: console.print(device)
 
@@ -203,7 +203,7 @@ class LAN_Sniffer():
         if ip_src not in Variables.ip_srcs:
             Variables.ip_srcs.append(ip_src)
             cls._categorize(question, name, data)
-            console.print(f"[bold green][+]New mDNS Device:[/bold green] {device}")
+            console.print(f"[bold green] [+]New mDNS Device:[/bold green] {device}")
 
         else: console.print(device)
 
@@ -211,9 +211,9 @@ class LAN_Sniffer():
         c2 = "bold yellow"
         c3 = "bold green"
 
-        panel.renderable = (f"[bold magenta]Total Devices:[/bold magenta] [bold white]{Variables.dev_total}[/bold white]  -  [bold magenta]Packets:[/bold magenta] [bold white]{Variables.pkts}[/bold white]  -  [{c3}]Developed by NSM Barii"
-                    f"\n[{c1}]Apple:[/{c1}] [{c2}]{Variables.dev_apples}[/{c2}]  -  [{c1}]Roku:[/{c1}] [{c2}]{Variables.dev_roku}[/{c2}]  -  [{c1}]Google:[/{c1}] [{c2}]{Variables.dev_google}[/{c2}]  -  [{c1}]Amazon:[/{c1}] [{c2}]{Variables.dev_amazon}[/{c2}]  -  [{c1}]Samsung:[/{c1}] [{c2}]{Variables.dev_samsung}[/{c2}]  -  [{c1}]Unknown:[/{c1}] [{c2}]{Variables.dev_unknown}[/{c2}]"
-                    )
+        panel.renderable = (f"[bold magenta]Total Devices:[/bold magenta] [bold white]{Variables.dev_total}[/bold white]  -  [bold magenta]Packets:[/bold magenta] [bold white]{Variables.pkts}[/bold white]              -           [{c3}]Developed by NSM Barii"
+                f"\n[{c1}]Apple:[/{c1}] [{c2}]{Variables.dev_apples}[/{c2}]  -  [{c1}]Roku:[/{c1}] [{c2}]{Variables.dev_roku}[/{c2}]  -  [{c1}]Google:[/{c1}] [{c2}]{Variables.dev_google}[/{c2}]  -  [{c1}]Amazon:[/{c1}] [{c2}]{Variables.dev_amazon}[/{c2}]  -  [{c1}]Samsung:[/{c1}] [{c2}]{Variables.dev_samsung}[/{c2}]  -  [{c1}]Unknown:[/{c1}] [{c2}]{Variables.dev_unknown}[/{c2}]"
+                )
 
 
     @classmethod
