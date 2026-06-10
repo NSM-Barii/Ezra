@@ -139,13 +139,13 @@ class LAN_Sniffer():
             Variables.dev_ssdp += 1
             console.print(f"\n[bold green][+] New SSDP Device\n[bold cyan]    IP       [white]→  {ip_src}\n[bold cyan]    Type     [white]→  {type}\n[bold cyan]    Server   [white]→  {server}\n[bold cyan]    USN      [white]→  {usn}\n[bold cyan]    Location [white]→  {location}\n")
 
-        else: console.print(f"[dim][~] SSDP\n    IP       →  {ip_src}\n    Type     →  {type}\n    Server   →  {server}\n    USN      →  {usn}\n    Location →  {location}")
+        else: console.print(f"[dim][~] SSDP  {ip_src}  |  {type}  |  {server}  |  {usn}  |  {location}")
 
         c1 = "bold red"
         c2 = "bold yellow"
         c3 = "bold green"
 
-        panel.renderable = (f"[bold magenta]Total Devices:[/bold magenta] [bold white]{Variables.dev_total}[/bold white]  -  [bold magenta]Packets:[/bold magenta] [bold white]{Variables.pkts}[/bold white]  -  [{c3}]Developed by NSM Barii[/{c3}]"
+        panel.renderable = (f"[bold magenta]Total Devices:[/bold magenta] [bold white]{Variables.dev_total}[/bold white]  -  [bold magenta]Packets:[/bold magenta] [bold white]{Variables.pkts}[/bold white]                    [{c3}]Developed by NSM Barii[/{c3}]"
                     f"\n                             [{c1}]mDNS:[/{c1}] [{c2}]{Variables.dev_mdns}[/{c2}]  -  [{c1}]SSDP:[/{c1}] [{c2}]{Variables.dev_ssdp}[/{c2}]"
                     f"\n[{c1}]Apple:[/{c1}] [{c2}]{Variables.dev_apples}[/{c2}]  -  [{c1}]Roku:[/{c1}] [{c2}]{Variables.dev_roku}[/{c2}]  -  [{c1}]Google:[/{c1}] [{c2}]{Variables.dev_google}[/{c2}]  -  [{c1}]Amazon:[/{c1}] [{c2}]{Variables.dev_amazon}[/{c2}]  -  [{c1}]Samsung:[/{c1}] [{c2}]{Variables.dev_samsung}[/{c2}]  -  [{c1}]Unknown:[/{c1}] [{c2}]{Variables.dev_unknown}[/{c2}]"
                     )
@@ -212,13 +212,13 @@ class LAN_Sniffer():
             Variables.dev_mdns += 1
             console.print(f"\n[bold green][+] New mDNS Device\n[bold cyan]    IP       [white]→  {ip_src}\n[bold cyan]    Question [white]→  {question}\n[bold cyan]    Name     [white]→  {name}\n[bold cyan]    Data     [white]→  {data}\n")
 
-        else: console.print(f"[dim][~] mDNS\n    IP       →  {ip_src}\n    Question →  {question}\n    Name     →  {name}\n    Data     →  {data}")
+        else: console.print(f"[dim][~] mDNS  {ip_src}  |  {question}  |  {name}  |  {data}")
 
         c1 = "bold red"
         c2 = "bold yellow"
         c3 = "bold green"
 
-        panel.renderable = (f"[bold magenta]Total Devices:[/bold magenta] [bold white]{Variables.dev_total}[/bold white]  -  [bold magenta]Packets:[/bold magenta] [bold white]{Variables.pkts}[/bold white]  -  [{c3}]Developed by NSM Barii[/{c3}]"
+        panel.renderable = (f"[bold magenta]Total Devices:[/bold magenta] [bold white]{Variables.dev_total}[/bold white]  -  [bold magenta]Packets:[/bold magenta] [bold white]{Variables.pkts}[/bold white]                    [{c3}]Developed by NSM Barii[/{c3}]"
                 f"\n                             [{c1}]mDNS:[/{c1}] [{c2}]{Variables.dev_mdns}[/{c2}]  -  [{c1}]SSDP:[/{c1}] [{c2}]{Variables.dev_ssdp}[/{c2}]"
                 f"\n[{c1}]Apple:[/{c1}] [{c2}]{Variables.dev_apples}[/{c2}]  -  [{c1}]Roku:[/{c1}] [{c2}]{Variables.dev_roku}[/{c2}]  -  [{c1}]Google:[/{c1}] [{c2}]{Variables.dev_google}[/{c2}]  -  [{c1}]Amazon:[/{c1}] [{c2}]{Variables.dev_amazon}[/{c2}]  -  [{c1}]Samsung:[/{c1}] [{c2}]{Variables.dev_samsung}[/{c2}]  -  [{c1}]Unknown:[/{c1}] [{c2}]{Variables.dev_unknown}[/{c2}]"
                 )
