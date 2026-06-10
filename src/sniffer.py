@@ -7,7 +7,7 @@ from rich.live import Live
 
 
 # ETC IMPORTS
-from scapy.all import sniff, IP, UDP, DNS, DNSRR, Raw, sendp
+from scapy.all import sniff, IP, UDP, DNS, DNSRR, Raw, sendp, DNSQR
 import threading, time
 
 
@@ -54,7 +54,7 @@ class LAN_Sniffer():
     
     
     @classmethod
-    def _query_ssdp(cls):
+    def _query_pkts(cls):
         """This will send out a ssdp request, resulting in devices respondng back"""
 
         
@@ -67,13 +67,20 @@ class LAN_Sniffer():
           "\r\n"                                                                                                                                                                                        
         )  
 
-        pkt = IP(dst="239.255.255.250")/UDP(sport=1900, dport=1900)/Raw(load=payload.encode())
+        pkt_mdns = (                                                                                                                                                                                           
+          IP(dst="224.0.0.251") /         
+          UDP(sport=5353, dport=5353) /                                                                                                                                                                 
+          DNS(rd=0, qd=DNSQR(qname="_services._dns-sd._udp.local", qtype="PTR"))                                                                                                                        
+      )  
 
-        console.print("[bold yellow][+] Sending M-Search requests for SSDP")
+        pkt_ssdp = IP(dst="239.255.255.250")/UDP(sport=1900, dport=1900)/Raw(load=payload.encode())
+
+        console.print("[bold yellow][+] Crafting Discovery Packets")
         
         while True:
-            sendp(pkt, verbose=False)
-            time.sleep(Variables.sleep_ssdp)
+            sendp(pkt_mdns, verbose=False)
+            sendp(pkt_ssdp, verbose=False)
+            time.sleep(Variables.packet_sleep)
 
 
 
@@ -111,9 +118,6 @@ class LAN_Sniffer():
         usn      = fields.get("usn",      False)
 
         
-        if ip_src not in Variables.ip_srcs:
-            Variables.ip_srcs.append(ip_src)
-            cls._categorize(type, server, usn)
 
         Variables.pkts +=1
         device = {
@@ -126,14 +130,18 @@ class LAN_Sniffer():
             "server": server,
             "usn": usn
         }
+        if ip_src not in Variables.ip_srcs:
+            Variables.ip_srcs.append(ip_src)
+            cls._categorize(type, server, usn)
+            console.print(f"[bold green][+]New mDNS Device:[/bold green] {device}")
 
-        console.print(device)
+        else: console.print(device)
 
         c1 = "bold red"
         c2 = "bold yellow"
         c3 = "bold green"
 
-        panel.renderable = (f"[bold magenta]Total Devices:[/bold magenta] [bold white]{Variables.dev_total}[/bold white]  -  [bold magenta]Packets:[/bold magenta] [bold white]{Variables.pkts}[/bold white]  -  [{c3}]Developed by NSM Barii"
+        panel.renderable = (f"[bold magenta]Total Devices:[/bold magenta] [bold white]{Variables.dev_total}[/bold white]  -  [bold magenta]Packets:[/bold magenta] [bold white]{Variables.pkts}[/bold white]              -           [{c3}]Developed by NSM Barii"
                     f"\n[{c1}]Apple:[/{c1}] [{c2}]{Variables.dev_apples}[/{c2}]  -  [{c1}]Roku:[/{c1}] [{c2}]{Variables.dev_roku}[/{c2}]  -  [{c1}]Google:[/{c1}] [{c2}]{Variables.dev_google}[/{c2}]  -  [{c1}]Amazon:[/{c1}] [{c2}]{Variables.dev_amazon}[/{c2}]  -  [{c1}]Samsung:[/{c1}] [{c2}]{Variables.dev_samsung}[/{c2}]  -  [{c1}]Unknown:[/{c1}] [{c2}]{Variables.dev_unknown}[/{c2}]"
                     )
     
@@ -181,9 +189,6 @@ class LAN_Sniffer():
                 data = ans.rdata
         
       
-        if ip_src not in Variables.ip_srcs:
-            Variables.ip_srcs.append(ip_src)
-            cls._categorize(question, name, data)
 
         Variables.pkts +=1
         device = {
@@ -195,8 +200,12 @@ class LAN_Sniffer():
             "name": name,
             "data": data
         }
+        if ip_src not in Variables.ip_srcs:
+            Variables.ip_srcs.append(ip_src)
+            cls._categorize(question, name, data)
+            console.print(f"[bold green][+]New mDNS Device:[/bold green] {device}")
 
-        console.print(device)
+        else: console.print(device)
 
         c1 = "bold red"
         c2 = "bold yellow"
@@ -211,16 +220,16 @@ class LAN_Sniffer():
     def _handle_pkt(cls, pkt):
         """This will be used to segment where a pkt will go"""
 
-        
+
         def go(pkt):
             sport = pkt[UDP].sport
             dport = pkt[UDP].dport
 
 
             if sport == PORT_SSDP or dport == PORT_SSDP:   cls._parse_ssdp(pkt=pkt)
-            elif dport == PORT_MDNS or sport == PORT_MDNS: cls._parse_mdns(pkt=pkt) 
-            
-        
+            elif dport == PORT_MDNS or sport == PORT_MDNS: cls._parse_mdns(pkt=pkt)
+
+
         threading.Thread(target=go, args=(pkt,), daemon=True).start()
     
 
@@ -236,7 +245,7 @@ class LAN_Sniffer():
             f"\n   - SSDP: {PORT_SSDP}\n"
         )
 
-        threading.Thread(target=cls._query_ssdp, args=(), daemon=True).start()
+        threading.Thread(target=cls._query_pkts, args=(), daemon=True).start()
         
         with Live(panel, console=console, refresh_per_second=4):
 

@@ -16,7 +16,7 @@ console = Console()
 class Variables():
     """Multi - Vars"""
 
-    sleep_ssdp = 30
+    packet_sleep = 30
 
 
     console = console
