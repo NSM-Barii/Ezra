@@ -82,29 +82,33 @@
   </text>
 
   <!-- Tech details bar -->
-  <rect x="300" y="232" width="600" height="40" fill="#000a0f" opacity="0.8" rx="5"/>
+  <rect x="250" y="232" width="700" height="40" fill="#000a0f" opacity="0.8" rx="5"/>
 
   <!-- Feature badges -->
   <g>
-    <text x="330" y="257" font-family="'Courier New', monospace" font-size="12" fill="#0088cc" text-anchor="middle">
+    <text x="300" y="257" font-family="'Courier New', monospace" font-size="12" fill="#0088cc" text-anchor="middle">
       [mDNS]
       <animate attributeName="fill" values="#0088cc;#00aaff;#0088cc" dur="2s" repeatCount="indefinite"/>
     </text>
-    <text x="440" y="257" font-family="'Courier New', monospace" font-size="12" fill="#0088cc" text-anchor="middle">
+    <text x="400" y="257" font-family="'Courier New', monospace" font-size="12" fill="#0088cc" text-anchor="middle">
       [SSDP]
       <animate attributeName="fill" values="#0088cc;#00aaff;#0088cc" dur="2s" begin="0.3s" repeatCount="indefinite"/>
     </text>
-    <text x="550" y="257" font-family="'Courier New', monospace" font-size="12" fill="#0088cc" text-anchor="middle">
-      [SPOOF]
+    <text x="510" y="257" font-family="'Courier New', monospace" font-size="12" fill="#0088cc" text-anchor="middle">
+      [FINGERPRINT]
       <animate attributeName="fill" values="#0088cc;#00aaff;#0088cc" dur="2s" begin="0.6s" repeatCount="indefinite"/>
     </text>
-    <text x="670" y="257" font-family="'Courier New', monospace" font-size="12" fill="#0088cc" text-anchor="middle">
-      [FINGERPRINT]
+    <text x="640" y="257" font-family="'Courier New', monospace" font-size="12" fill="#0088cc" text-anchor="middle">
+      [mDNS SPOOF]
       <animate attributeName="fill" values="#0088cc;#00aaff;#0088cc" dur="2s" begin="0.9s" repeatCount="indefinite"/>
     </text>
-    <text x="810" y="257" font-family="'Courier New', monospace" font-size="12" fill="#0088cc" text-anchor="middle">
-      [PRIVACY]
+    <text x="780" y="257" font-family="'Courier New', monospace" font-size="12" fill="#0088cc" text-anchor="middle">
+      [SSDP SPOOF]
       <animate attributeName="fill" values="#0088cc;#00aaff;#0088cc" dur="2s" begin="1.2s" repeatCount="indefinite"/>
+    </text>
+    <text x="910" y="257" font-family="'Courier New', monospace" font-size="12" fill="#0088cc" text-anchor="middle">
+      [CVE LOOKUP]
+      <animate attributeName="fill" values="#0088cc;#00aaff;#0088cc" dur="2s" begin="1.5s" repeatCount="indefinite"/>
     </text>
   </g>
 

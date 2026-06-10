@@ -4,13 +4,19 @@
 
 ---
 
+> Passive LAN intelligence — silently maps mDNS & SSDP traffic to fingerprint devices, expose privacy risks, and surface CVE targets
+
+![Status](https://img.shields.io/badge/status-under%20development-blue?style=flat-square)
+
+---
+
 ### *By a Star Wars Nerd*
 
 > **"I can feel them... I can feel all of them."** - Ezra Bridger
 
 Passive LAN intelligence tool. Listens for mDNS and SSDP traffic to silently map every device on your network — who they are, what they're broadcasting, and what that means for your privacy.
 
-**Core Features:** mDNS Sniffing • SSDP Sniffing • Device Fingerprinting • mDNS Spoofing • Brand Categorization • Live Stats Panel
+**Core Features:** mDNS Sniffing • SSDP Sniffing • Device Fingerprinting • Brand Categorization • Live Stats Panel • mDNS Spoofing • SSDP Spoofing (soon) • CVE Lookup (soon)
 
 ---
 
@@ -58,6 +64,17 @@ sudo venv/bin/python spoofer.py
 | SSDP | 1900 | 239.255.255.250 | Smart TVs, Amazon, Samsung, UPnP |
 
 **Device fingerprinting by brand:** Apple · Google · Amazon · Roku · Samsung · Unknown
+
+---
+
+## Coming Soon
+
+| Feature | Description |
+|---------|-------------|
+| UPnP Device Description Fetcher | Auto-fetch LOCATION XML from SSDP devices — returns exact model + firmware version for CVE research |
+| SSDP Spoofing | Flood LAN with fake UPnP device announcements — more reliable than mDNS spoofing, zero conflict resolution |
+| CVE Lookup | After identifying model/firmware, auto-query NVD API — Ezra tells you what CVEs exist for each discovered device |
+| Device Export | Save discovered devices to file for use with other NSM tools |
 
 ---
 
