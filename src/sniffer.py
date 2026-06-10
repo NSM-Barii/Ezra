@@ -236,7 +236,7 @@ class LAN_Sniffer():
             f"\n   - SSDP: {PORT_SSDP}\n"
         )
 
-        threading.Thread(cls._query_ssdp, args=(), daemon=True).start()
+        threading.Thread(cls._query_ssdp, daemon=True).start()
         
         with Live(panel, console=console, refresh_per_second=4):
 
