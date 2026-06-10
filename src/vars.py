@@ -16,6 +16,8 @@ console = Console()
 class Variables():
     """Multi - Vars"""
 
+    sleep_ssdp = 30
+
 
     console = console
     panel   = Panel(renderable="Developed by NSM Barii", style="bold red", border_style="bold purple", expand=False, title="Stats")

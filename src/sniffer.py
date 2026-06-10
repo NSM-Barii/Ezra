@@ -7,8 +7,8 @@ from rich.live import Live
 
 
 # ETC IMPORTS
-from scapy.all import sniff, IP, UDP, DNS, DNSRR, Raw
-import threading
+from scapy.all import sniff, IP, UDP, DNS, DNSRR, Raw, sendp
+import threading, time
 
 
 # NSM MODULES
@@ -50,6 +50,31 @@ class LAN_Sniffer():
         else:                                              Variables.dev_unknown += 1
 
         Variables.dev_total += 1
+
+    
+    
+    @classmethod
+    def _query_ssdp(cls):
+        """This will send out a ssdp request, resulting in devices respondng back"""
+
+        
+        payload = (
+          "M-SEARCH * HTTP/1.1\r\n"                                                                                                                                                                     
+          "HOST: 239.255.255.250:1900\r\n"                  
+          "MAN: \"ssdp:discover\"\r\n"                                                                                                                                                                  
+          "MX: 3\r\n"                                       
+          "ST: ssdp:all\r\n"
+          "\r\n"                                                                                                                                                                                        
+        )  
+
+        pkt = IP(dst="239.255.255.250")/UDP(sport=1900, dport=1900)/Raw(load=payload.encode())
+
+        console.print("[bold yellow][+] Sending M-Search requests for SSDP")
+        
+        while True:
+            sendp(pkt, verbose=False)
+            time.sleep(Variables.sleep_ssdp)
+
 
 
     @classmethod
@@ -181,6 +206,7 @@ class LAN_Sniffer():
                     f"\n[{c1}]Apple:[/{c1}] [{c2}]{Variables.dev_apples}[/{c2}]  -  [{c1}]Roku:[/{c1}] [{c2}]{Variables.dev_roku}[/{c2}]  -  [{c1}]Google:[/{c1}] [{c2}]{Variables.dev_google}[/{c2}]  -  [{c1}]Amazon:[/{c1}] [{c2}]{Variables.dev_amazon}[/{c2}]  -  [{c1}]Samsung:[/{c1}] [{c2}]{Variables.dev_samsung}[/{c2}]  -  [{c1}]Unknown:[/{c1}] [{c2}]{Variables.dev_unknown}[/{c2}]"
                     )
 
+
     @classmethod
     def _handle_pkt(cls, pkt):
         """This will be used to segment where a pkt will go"""
@@ -209,6 +235,8 @@ class LAN_Sniffer():
             f"\n   - mDNS: {PORT_MDNS}"
             f"\n   - SSDP: {PORT_SSDP}\n"
         )
+
+        threading.Thread(cls._query_ssdp, args=(), dameon=True).start()
         
         with Live(panel, console=console, refresh_per_second=4):
 
