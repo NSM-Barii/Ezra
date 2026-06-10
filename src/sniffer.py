@@ -75,7 +75,13 @@ class LAN_Sniffer():
 
         pkt_ssdp = IP(dst="239.255.255.250")/UDP(sport=32000, dport=1900)/Raw(load=payload.encode())
 
-        console.print("[bold yellow][+] Crafting Discovery Packets\n")
+        console.print("\n[bold cyan]┌─────────────────────────────────────┐")
+        console.print("[bold cyan]│        Sending Discovery Queries     │")
+        console.print("[bold cyan]├─────────────────────────────────────┤")
+        console.print("[bold cyan]│ [bold yellow]mDNS[/bold yellow]  →  224.0.0.251:5353          [bold cyan]│")
+        console.print("[bold cyan]│ [bold yellow]SSDP[/bold yellow]  →  239.255.255.250:1900       [bold cyan]│")
+        console.print(f"[bold cyan]│ [bold yellow]Sleep[/bold yellow] →  {Variables.packet_sleep}s                          [bold cyan]│")
+        console.print("[bold cyan]└─────────────────────────────────────┘\n")
 
         while True:
             send(pkt_mdns, verbose=False)
@@ -94,7 +100,7 @@ class LAN_Sniffer():
         text   = pkt[Raw].load.decode(errors="ignore")
         fields = {}
 
-        if "ssdp" not in text.lower() and "upnp" not in text.lower(): return False
+        if "ssdp" not in text.lower() and "upnp" not in text.lower() and "http/1.1 200" not in text.lower(): return False
 
 
         ip_src = pkt[IP].src
@@ -133,7 +139,8 @@ class LAN_Sniffer():
         if ip_src not in Variables.ip_srcs:
             Variables.ip_srcs.append(ip_src)
             cls._categorize(type, server, usn)
-            console.print(f"[bold green] [+]New mDNS Device:[/bold green] {device}")
+            Variables.dev_ssdp += 1
+            console.print(f"[bold green] [+]New SSDP Device:[/bold green] {device}")
 
         else: console.print(device)
 
@@ -141,10 +148,11 @@ class LAN_Sniffer():
         c2 = "bold yellow"
         c3 = "bold green"
 
-        panel.renderable = (f"[bold magenta]Total Devices:[/bold magenta] [bold white]{Variables.dev_total}[/bold white]  -  [bold magenta]Packets:[/bold magenta] [bold white]{Variables.pkts}[/bold white]              -           [{c3}]Developed by NSM Barii"
+        panel.renderable = (f"[bold magenta]Total Devices:[/bold magenta] [bold white]{Variables.dev_total}[/bold white]  -  [bold magenta]Packets:[/bold magenta] [bold white]{Variables.pkts}[/bold white]  -  [{c3}]Developed by NSM Barii"
+                    f"\n[{c1}]mDNS:[/{c1}] [{c2}]{Variables.dev_mdns}[/{c2}]  -  [{c1}]SSDP:[/{c1}] [{c2}]{Variables.dev_ssdp}[/{c2}]"
                     f"\n[{c1}]Apple:[/{c1}] [{c2}]{Variables.dev_apples}[/{c2}]  -  [{c1}]Roku:[/{c1}] [{c2}]{Variables.dev_roku}[/{c2}]  -  [{c1}]Google:[/{c1}] [{c2}]{Variables.dev_google}[/{c2}]  -  [{c1}]Amazon:[/{c1}] [{c2}]{Variables.dev_amazon}[/{c2}]  -  [{c1}]Samsung:[/{c1}] [{c2}]{Variables.dev_samsung}[/{c2}]  -  [{c1}]Unknown:[/{c1}] [{c2}]{Variables.dev_unknown}[/{c2}]"
                     )
-    
+
 
     @classmethod
     def _parse_mdns(cls, pkt, verbose=False):
@@ -203,6 +211,7 @@ class LAN_Sniffer():
         if ip_src not in Variables.ip_srcs:
             Variables.ip_srcs.append(ip_src)
             cls._categorize(question, name, data)
+            Variables.dev_mdns += 1
             console.print(f"[bold green] [+]New mDNS Device:[/bold green] {device}")
 
         else: console.print(device)
@@ -211,7 +220,8 @@ class LAN_Sniffer():
         c2 = "bold yellow"
         c3 = "bold green"
 
-        panel.renderable = (f"[bold magenta]Total Devices:[/bold magenta] [bold white]{Variables.dev_total}[/bold white]  -  [bold magenta]Packets:[/bold magenta] [bold white]{Variables.pkts}[/bold white]              -           [{c3}]Developed by NSM Barii"
+        panel.renderable = (f"[bold magenta]Total Devices:[/bold magenta] [bold white]{Variables.dev_total}[/bold white]  -  [bold magenta]Packets:[/bold magenta] [bold white]{Variables.pkts}[/bold white]  -  [{c3}]Developed by NSM Barii"
+                f"\n[{c1}]mDNS:[/{c1}] [{c2}]{Variables.dev_mdns}[/{c2}]  -  [{c1}]SSDP:[/{c1}] [{c2}]{Variables.dev_ssdp}[/{c2}]"
                 f"\n[{c1}]Apple:[/{c1}] [{c2}]{Variables.dev_apples}[/{c2}]  -  [{c1}]Roku:[/{c1}] [{c2}]{Variables.dev_roku}[/{c2}]  -  [{c1}]Google:[/{c1}] [{c2}]{Variables.dev_google}[/{c2}]  -  [{c1}]Amazon:[/{c1}] [{c2}]{Variables.dev_amazon}[/{c2}]  -  [{c1}]Samsung:[/{c1}] [{c2}]{Variables.dev_samsung}[/{c2}]  -  [{c1}]Unknown:[/{c1}] [{c2}]{Variables.dev_unknown}[/{c2}]"
                 )
 

@@ -32,4 +32,6 @@ class Variables():
     dev_samsung = 0
     dev_unknown = 0
     dev_total   = 0
+    dev_mdns    = 0
+    dev_ssdp    = 0
     pkts        = 0
